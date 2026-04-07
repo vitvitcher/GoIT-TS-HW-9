@@ -1,75 +1,31 @@
-"use client";
-import { useEffect, useState } from 'react'
-import css from './NotesPage.module.css'
-import toast, { Toaster } from 'react-hot-toast';
-import { fetchNotes } from '../../lib/api'
-import SearchBox from '../../components/SearchBox/SearchBox';
-import NoteList from '../../components/NoteList/NoteList';
-import Modal from '../../components/Modal/Modal';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import Pagination from '../../components/Pagination/Pagination';
-import useModalControl from '../../hooks/ModalControl';
-import NoteForm from '../../components/NoteForm/NoteForm';
-import { useDebouncedCallback } from 'use-debounce';
+import {
+    QueryClient,
+    HydrationBoundary,
+    dehydrate,
+} from "@tanstack/react-query";
+import { fetchNotes } from "@/lib/api";
+import NoteClient from "./Notes.client";
 
+type Props = {
+    params: Promise<{
+        query: string,
+        currentPage: number
+    }>;
+};
 
-
-function Notes() {
-    console.log("App rendered")
-    const notify = () => toast.error('No notes found for your request.');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [query, setQuery] = useState("");
-    const { isModalOpen, openModal, closeModal } = useModalControl()
-
-    const { data, isSuccess } = useQuery({
+const NoteDetails = async ({ params }: Props) => {
+    const { query, currentPage } = await params;
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery({
         queryKey: ['notes', query, currentPage],
-        queryFn: () => fetchNotes(query, currentPage),
-        placeholderData: keepPreviousData,
-    })
-
-
-
-    const totalPages = data?.totalPages ?? 0;
-    useEffect(() => {
-        if (isSuccess && data.notes.length == 0) {
-            console.log(data.notes)
-            notify()
-        }
-    }, [data, isSuccess])
-
-
-
-
-
-
-    const handleSearch = useDebouncedCallback((newQuery) => {
-        setQuery(newQuery)
-        setCurrentPage(1)
-    }, 300)
-
-
+        queryFn: () => fetchNotes(query ? query : "", currentPage ? currentPage : 1)
+    });
 
     return (
-        <>
-            <div className={css.app}>
-                <header className={css.toolbar}>
-                    <SearchBox onChange={handleSearch}></SearchBox>
-                    {isSuccess && totalPages > 1 &&
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={setCurrentPage}></Pagination>}
-                    <button className={css.button}
-                        onClick={() => openModal()}>Create note +</button>
-                </header>
-                <Toaster></Toaster>
-                {data && data.notes.length > 0 && <NoteList notes={data.notes}></NoteList>}
-                {isModalOpen && <Modal onClose={() => closeModal()}>
-                    <NoteForm onCancel={() => closeModal()}></NoteForm>
-                </Modal>}
-            </div >
-        </>
-    )
-}
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <NoteClient />
+        </HydrationBoundary>
+    );
+};
 
-export default Notes
+export default NoteDetails;
