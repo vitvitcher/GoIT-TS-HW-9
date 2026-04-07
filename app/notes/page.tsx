@@ -7,14 +7,11 @@ import { fetchNotes } from "@/lib/api";
 import NoteClient from "./Notes.client";
 
 type Props = {
-    params: Promise<{
-        query: string,
-        currentPage: number
-    }>;
+    params: { query: string; currentPage: number }
 };
 
-const NoteDetails = async ({ params }: Props) => {
-    const { query, currentPage } = await params;
+const NotesPage = async ({ params }: Props) => {
+    const { query, currentPage } = params;
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery({
         queryKey: ['notes', query, currentPage],
@@ -28,4 +25,4 @@ const NoteDetails = async ({ params }: Props) => {
     );
 };
 
-export default NoteDetails;
+export default NotesPage;

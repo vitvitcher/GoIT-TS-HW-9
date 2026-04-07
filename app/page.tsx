@@ -2,7 +2,7 @@ import css from './Home.module.css';
 
 const Home = () => {
     return (
-        <div className={css.main}>
+        <main className={css.main}>
             <div className={css.container}>
                 <h1 className={css.title}>Welcome to NoteHub</h1>
                 <p className={css.description}>
@@ -17,7 +17,7 @@ const Home = () => {
                     and productivity.
                 </p>
             </div>
-        </div>
+        </main>
     );
 };
 
