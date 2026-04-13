@@ -9,7 +9,7 @@ interface FetchedData {
 }
 
 
-export const fetchNotes = async (search: string, page: number) => {
+export const fetchNotes = async (search: string, page: number, tag?: string) => {
     const results: FetchedData = (await axios.get<FetchedData>(url, {
         headers: {
             accept: 'application/json',
@@ -18,6 +18,7 @@ export const fetchNotes = async (search: string, page: number) => {
         params: {
             search,
             page,
+            tag,
             perPage: 12
         }
     })).data

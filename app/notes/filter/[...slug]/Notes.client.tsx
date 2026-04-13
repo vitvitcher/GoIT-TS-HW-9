@@ -2,19 +2,21 @@
 import { useEffect, useState } from 'react'
 import css from './NotesPage.module.css'
 import toast, { Toaster } from 'react-hot-toast';
-import { fetchNotes } from '../../lib/api'
-import SearchBox from '../../components/SearchBox/SearchBox';
-import NoteList from '../../components/NoteList/NoteList';
-import Modal from '../../components/Modal/Modal';
+import { fetchNotes } from '../../../../lib/api'
+import SearchBox from '../../../../components/SearchBox/SearchBox';
+import NoteList from '../../../../components/NoteList/NoteList';
+import Modal from '../../../../components/Modal/Modal';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import Pagination from '../../components/Pagination/Pagination';
-import useModalControl from '../../hooks/ModalControl';
-import NoteForm from '../../components/NoteForm/NoteForm';
+import Pagination from '../../../../components/Pagination/Pagination';
+import useModalControl from '../../../../hooks/ModalControl';
+import NoteForm from '../../../../components/NoteForm/NoteForm';
 import { useDebouncedCallback } from 'use-debounce';
 
+interface NotesClientProps {
+    tag: string | undefined
+}
 
-
-function NotesClient() {
+function NotesClient({ tag }: NotesClientProps) {
     console.log("App rendered")
     const notify = () => toast.error('No notes found for your request.');
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,10 +24,10 @@ function NotesClient() {
     const { isModalOpen, openModal, closeModal } = useModalControl()
 
     const { data, isSuccess } = useQuery({
-        queryKey: ['notes', query, currentPage],
-        queryFn: () => fetchNotes(query, currentPage),
+        queryKey: ['notes', query, currentPage, tag],
+        queryFn: () => fetchNotes(query, currentPage, tag),
         refetchOnMount: false,
-        placeholderData: keepPreviousData,
+        placeholderData: keepPreviousData
     })
 
 
@@ -33,21 +35,17 @@ function NotesClient() {
     const totalPages = data?.totalPages ?? 0;
     useEffect(() => {
         if (isSuccess && data.notes.length == 0) {
-            console.log(data.notes)
+            console.log("notes: ", data.notes)
             notify()
         }
+        return toast.dismiss
     }, [data, isSuccess])
-
-
-
-
 
 
     const handleSearch = useDebouncedCallback((newQuery) => {
         setQuery(newQuery)
         setCurrentPage(1)
     }, 300)
-
 
 
     return (
