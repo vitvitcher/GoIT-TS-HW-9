@@ -14,10 +14,12 @@ function EditProfilePage() {
     }
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
-    const [avatar, setAvatar] = useState('')
+    const [avatar, setAvatar] = useState<string | null>(null)
     const store = useAuthStore()
 
-
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(event.target.value);
+    };
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -50,12 +52,12 @@ function EditProfilePage() {
             <div className={css.profileCard}>
                 <h1 className={css.formTitle}>Edit Profile</h1>
 
-                <Image src={avatar}
+                {avatar && (<Image src={avatar}
                     alt="User Avatar"
                     width={120}
                     height={120}
                     className={css.avatar}
-                />
+                />)}
 
                 <form className={css.profileInfo}
                     action={handleSubmit}>
@@ -65,10 +67,16 @@ function EditProfilePage() {
                             type="text"
                             className={css.input}
                             value={username}
+                            onChange={handleChange}
                         />
                     </div>
+                    <input id="email"
+                        type="text"
+                        className={css.input}
+                        defaultValue={email}
+                        disabled={true}
+                    />
 
-                    <p>Email: {email}</p>
 
                     <div className={css.actions}>
                         <button type="submit" className={css.saveButton}>
