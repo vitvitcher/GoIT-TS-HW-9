@@ -41,10 +41,6 @@ const SignUp = () => {
             <h1>Sign up</h1>
             <form action={handleSubmit}>
                 <label>
-                    Username
-                    <input type="text" name="userName" required />
-                </label>
-                <label>
                     Email
                     <input type="email" name="email" required />
                 </label>

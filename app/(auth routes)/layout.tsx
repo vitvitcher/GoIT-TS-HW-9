@@ -1,59 +1,27 @@
-import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+'use client'
+
 import "../globals.css";
-import Header from "@/components/Header/Header";
-import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import { useRouter } from "next/navigation";
+import { startTransition, useEffect, useState } from "react";
 
 
-const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-roboto',
-  display: 'swap',
-});
 
-export const metadata: Metadata = {
-  title: "NoteHub",
-  description: "Create and manage notes",
-  openGraph: {
-    title: `NoteHub`,
-    description: "NoteHub is a simple and efficient application designed for managing personal notes.It helps keep your thoughts organized and accessible in one place, whether you are at home or on the go.",
-    url: `https://notehub.com/`,
-    images: [
-      {
-        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'NoteHub Logo',
-      },
-    ],
-  },
-};
 
-export default function RootLayout({
+
+export default function PublicLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className={`${roboto.variable}`}>
-      <body>
-        <TanStackProvider>
 
-          <Header />
+  const [loading, setLoading] = useState(true);
+  const router = useRouter()
+  useEffect(() => {
 
-          {children}
-          {modal}
-
-          <footer>
-            <p>
-              Created <time dateTime='2026'>2026</time>
-            </p>
-          </footer>
-        </TanStackProvider>
-      </body>
-    </html>
-  );
+    router.refresh();
+    startTransition(() => {
+      setLoading(false);
+    });
+  }, [router]);
+  return <>{loading ? <div>Loading...</div> : children}</>;
 }

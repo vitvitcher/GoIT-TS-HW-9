@@ -9,27 +9,22 @@ import { useRouter } from "next/navigation";
 
 function AuthNavigation() {
     const router = useRouter()
-    const { isAuthenticated, user } = useAuthStore();
+    const { isAuthenticated, user, clearIsAuthenticated } = useAuthStore();
     const handleLogout = async () => {
-        try {
-            const res = await logout()
-            if (res) {
-                // Записуємо користувача у глобальний стан
-                router.push('/sign-in');
-            }
-        } catch (error) {
-        }
+        await logout()
+        clearIsAuthenticated();
+        router.push('/sign-in');
+
 
     };
 
-    return isAuthenticated && (
+    return isAuthenticated ? (
         <>
             <li className={css.navigationItem}>
                 <Link href="/profile" prefetch={false} className={css.navigationLink}>
                     Profile
                 </Link>
             </li>
-
             <li className={css.navigationItem}>
                 <p className={css.userEmail}>{user?.email}</p>
                 <button className={css.logoutButton}
@@ -37,6 +32,10 @@ function AuthNavigation() {
                     Logout
                 </button>
             </li>
+        </>
+    ) : (
+        <>
+
 
             <li className={css.navigationItem}>
                 <Link href="/sign-in" prefetch={false} className={css.navigationLink}>
@@ -49,7 +48,8 @@ function AuthNavigation() {
                     Sign up
                 </Link>
             </li>
-        </>)
+        </>
+    )
 }
 
 export default AuthNavigation

@@ -15,7 +15,6 @@ interface NotesClientProps {
 }
 
 function NotesClient({ tag }: NotesClientProps) {
-    console.log("App rendered")
     const notify = () => toast.error('No notes found for your request.');
     const [currentPage, setCurrentPage] = useState(1);
     const [query, setQuery] = useState("");
@@ -32,14 +31,13 @@ function NotesClient({ tag }: NotesClientProps) {
     const totalPages = data?.totalPages ?? 0;
     useEffect(() => {
         if (isSuccess && data.notes.length == 0) {
-            console.log("notes: ", data.notes)
             notify()
         }
-        return toast.dismiss
+        return toast.dismiss()
     }, [data, isSuccess])
 
 
-    const handleSearch = useDebouncedCallback((newQuery) => {
+    const handleSearch = useDebouncedCallback((newQuery: string) => {
         setQuery(newQuery)
         setCurrentPage(1)
     }, 300)

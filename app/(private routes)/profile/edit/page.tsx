@@ -5,32 +5,39 @@ import css from "./EditProfilePage.module.css"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useAuthStore } from "@/lib/store/authStore"
 
 function EditProfilePage() {
     const router = useRouter()
     type FormProps = {
         username: string
     }
-    const [username, setUername] = useState('')
+    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [avatar, setAvatar] = useState('')
+    const store = useAuthStore()
 
 
 
     useEffect(() => {
         const getUserInfo = async () => {
             const userInfo = await getMe()
-            setUername(userInfo.username)
+            setUsername(userInfo.username)
             setEmail(userInfo.email)
             setAvatar(userInfo.avatar)
         }
         getUserInfo()
-    }, [username, email, avatar])
+    }, [])
     const handleSubmit = async (FormData: FormData) => {
         try {
             const body = Object.fromEntries(FormData) as FormProps;
-            await updateMe(body.username)
-            router.push('/profile')
+            const res = await updateMe(body.username)
+            if (res) {
+                setUsername(body.username)
+                store.setUser(res)
+                router.push('/profile')
+            }
+
         } catch (error) {
             console.log(error)
         }

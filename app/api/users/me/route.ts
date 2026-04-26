@@ -8,7 +8,6 @@ import { isAxiosError } from 'axios';
 
 export async function GET() {
   try {
-    console.log("in the get function")
     const cookieStore = await cookies();
 
     const res = await api.get('/users/me', {
@@ -18,7 +17,6 @@ export async function GET() {
     });
     return NextResponse.json(res.data, { status: res.status });
   } catch (error) {
-    console.log("caught error")
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);
       return NextResponse.json(
