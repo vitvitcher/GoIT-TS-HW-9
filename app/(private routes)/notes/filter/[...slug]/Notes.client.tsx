@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react'
 import css from './NotesPage.module.css'
 import toast, { Toaster } from 'react-hot-toast';
-import { fetchNotes } from '../../../../lib/api'
-import SearchBox from '../../../../components/SearchBox/SearchBox';
-import NoteList from '../../../../components/NoteList/NoteList';
+import { fetchNotes } from '../../../../../lib/api/clientApi'
+import SearchBox from '../../../../../components/SearchBox/SearchBox';
+import NoteList from '../../../../../components/NoteList/NoteList';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import Pagination from '../../../../components/Pagination/Pagination';
+import Pagination from '../../../../../components/Pagination/Pagination';
 import { useDebouncedCallback } from 'use-debounce';
 import Link from 'next/link';
 

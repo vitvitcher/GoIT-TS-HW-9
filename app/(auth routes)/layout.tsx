@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import Header from "@/components/Header/Header";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
-import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
 
 const roboto = Roboto({
@@ -42,18 +41,17 @@ export default function RootLayout({
     <html lang="en" className={`${roboto.variable}`}>
       <body>
         <TanStackProvider>
-          <AuthProvider>
-            <Header />
 
-            {children}
-            {modal}
+          <Header />
 
-            <footer>
-              <p>
-                Created <time dateTime='2026'>2026</time>
-              </p>
-            </footer>
-          </AuthProvider>
+          {children}
+          {modal}
+
+          <footer>
+            <p>
+              Created <time dateTime='2026'>2026</time>
+            </p>
+          </footer>
         </TanStackProvider>
       </body>
     </html>
