@@ -64,7 +64,7 @@ function EditProfilePage() {
                         <input id="username"
                             type="text"
                             className={css.input}
-                            defaultValue={username}
+                            value={username}
                         />
                     </div>
 
@@ -75,7 +75,7 @@ function EditProfilePage() {
                             Save
                         </button>
                         <button type="button" className={css.cancelButton}
-                            onClick={() => router.push('/profile')}>
+                            onClick={() => router.back()}>
                             Cancel
                         </button>
                     </div>

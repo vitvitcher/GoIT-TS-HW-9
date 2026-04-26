@@ -33,7 +33,7 @@ function NotesClient({ tag }: NotesClientProps) {
         if (isSuccess && data.notes.length == 0) {
             notify()
         }
-        return toast.dismiss()
+        return () => toast.dismiss()
     }, [data, isSuccess])
 
 
